@@ -1,12 +1,59 @@
 import os
 import sqlite3
-from textwrap import dedent
+from textwrap import indent, dedent
 
 from database import Database
 
 
-def db_dialog(db):
-    pass
+def make_list(d):
+    return '\n'.join('{}. {}'.format(key, value) for key, value in d.items())
+
+
+def db_dialog(db, filename):
+    options_message = dedent('''\
+        Opened database: {}.
+        Please choose one of the following options:
+        1. Show observations.
+        2. Create observation.
+        3. Delete observation.
+        4. Show cities.
+        5. Create city.
+        6. Delete city.
+        7. Show weather states.
+        8. Show wind directions.
+        0. Close database.
+    '''.format(filename))
+    incorrect_option_message = 'Please enter a digit from 0 to 8.'
+
+    while True:
+        try:
+            option = int(input(options_message))
+            assert 0 <= option <= 8
+        except (ValueError, AssertionError):
+            print(incorrect_option_message)
+        else:
+            if option == 0:
+                break
+            elif option == 1:
+                print(db.select_observations())
+            elif option == 4:
+                print('List of the cities:')
+                print(indent(
+                    make_list(db.select_cities()),
+                    '  '
+                ))
+            elif option == 7:
+                print('List of the weather states:')
+                print(indent(
+                    make_list(db.select_states()),
+                    '  '
+                ))
+            elif option == 8:
+                print('List of the wind directions:')
+                print(indent(
+                    make_list(db.select_directions()),
+                    '  '
+                ))
 
 
 def main():
@@ -61,7 +108,7 @@ def main():
                     print(e)
                 else:
                     db.create()
-                    db_dialog(db)
+                    db_dialog(db, database_filename)
                     db.close()
             elif option == 2:
                 try:
@@ -70,7 +117,7 @@ def main():
                 except sqlite3.OperationalError as e:
                     print(e)
                 else:
-                    db_dialog(db)
+                    db_dialog(db, database_filename)
                     db.close()
             elif option == 3:
                 try:

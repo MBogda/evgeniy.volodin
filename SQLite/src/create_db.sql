@@ -1,59 +1,59 @@
 DROP TABLE IF EXISTS State;
 CREATE TABLE State (
   id     INTEGER PRIMARY KEY,
-  svalue  TEXT
+  value  TEXT
 );
-INSERT INTO State(svalue) VALUES ('Sunny');
-INSERT INTO State(svalue) VALUES ('Partly sunny');
-INSERT INTO State(svalue) VALUES ('Cloudy');
-INSERT INTO State(svalue) VALUES ('Partly cloudy');
-INSERT INTO State(svalue) VALUES ('Foggy');
-INSERT INTO State(svalue) VALUES ('Rainy');
-INSERT INTO State(svalue) VALUES ('Snowy');
+INSERT INTO State(value) VALUES ('Sunny');
+INSERT INTO State(value) VALUES ('Partly sunny');
+INSERT INTO State(value) VALUES ('Cloudy');
+INSERT INTO State(value) VALUES ('Partly cloudy');
+INSERT INTO State(value) VALUES ('Foggy');
+INSERT INTO State(value) VALUES ('Rainy');
+INSERT INTO State(value) VALUES ('Snowy');
 
 DROP TABLE IF EXISTS Direction;
 CREATE TABLE Direction (
   id     INTEGER PRIMARY KEY,
-  dvalue  TEXT
+  value  TEXT
 );
-INSERT INTO Direction(dvalue) VALUES ('North');
-INSERT INTO Direction(dvalue) VALUES ('Northeast');
-INSERT INTO Direction(dvalue) VALUES ('East');
-INSERT INTO Direction(dvalue) VALUES ('Southeast');
-INSERT INTO Direction(dvalue) VALUES ('South');
-INSERT INTO Direction(dvalue) VALUES ('Southwest');
-INSERT INTO Direction(dvalue) VALUES ('West');
-INSERT INTO Direction(dvalue) VALUES ('Northwest');
+INSERT INTO Direction(value) VALUES ('North');
+INSERT INTO Direction(value) VALUES ('Northeast');
+INSERT INTO Direction(value) VALUES ('East');
+INSERT INTO Direction(value) VALUES ('Southeast');
+INSERT INTO Direction(value) VALUES ('South');
+INSERT INTO Direction(value) VALUES ('Southwest');
+INSERT INTO Direction(value) VALUES ('West');
+INSERT INTO Direction(value) VALUES ('Northwest');
 
 DROP TABLE IF EXISTS City;
 CREATE TABLE City (
   id     INTEGER PRIMARY KEY,
-  cvalue  TEXT
+  value  TEXT
 );
-INSERT INTO City(cvalue) VALUES ('Moscow');
-INSERT INTO City(cvalue) VALUES ('Saint Petersburg');
-INSERT INTO City(cvalue) VALUES ('Novosibirsk');
-INSERT INTO City(cvalue) VALUES ('Yekaterinburg');
-INSERT INTO City(cvalue) VALUES ('Nizhny Novgorod');
-INSERT INTO City(cvalue) VALUES ('Kazan');
-INSERT INTO City(cvalue) VALUES ('Chelyabinsk');
-INSERT INTO City(cvalue) VALUES ('Omsk');
-INSERT INTO City(cvalue) VALUES ('Samara');
-INSERT INTO City(cvalue) VALUES ('Rostov-on-Don');
-INSERT INTO City(cvalue) VALUES ('Ufa');
-INSERT INTO City(cvalue) VALUES ('Krasnoyarsk');
-INSERT INTO City(cvalue) VALUES ('Perm');
-INSERT INTO City(cvalue) VALUES ('Voronezh');
-INSERT INTO City(cvalue) VALUES ('Volgograd');
-INSERT INTO City(cvalue) VALUES ('Krasnodar');
-INSERT INTO City(cvalue) VALUES ('Saratov');
-INSERT INTO City(cvalue) VALUES ('Tyumen');
-INSERT INTO City(cvalue) VALUES ('Tolyatti');
-INSERT INTO City(cvalue) VALUES ('Izhevsk');
+INSERT INTO City(value) VALUES ('Moscow');
+INSERT INTO City(value) VALUES ('Saint Petersburg');
+INSERT INTO City(value) VALUES ('Novosibirsk');
+INSERT INTO City(value) VALUES ('Yekaterinburg');
+INSERT INTO City(value) VALUES ('Nizhny Novgorod');
+INSERT INTO City(value) VALUES ('Kazan');
+INSERT INTO City(value) VALUES ('Chelyabinsk');
+INSERT INTO City(value) VALUES ('Omsk');
+INSERT INTO City(value) VALUES ('Samara');
+INSERT INTO City(value) VALUES ('Rostov-on-Don');
+INSERT INTO City(value) VALUES ('Ufa');
+INSERT INTO City(value) VALUES ('Krasnoyarsk');
+INSERT INTO City(value) VALUES ('Perm');
+INSERT INTO City(value) VALUES ('Voronezh');
+INSERT INTO City(value) VALUES ('Volgograd');
+INSERT INTO City(value) VALUES ('Krasnodar');
+INSERT INTO City(value) VALUES ('Saratov');
+INSERT INTO City(value) VALUES ('Tyumen');
+INSERT INTO City(value) VALUES ('Tolyatti');
+INSERT INTO City(value) VALUES ('Izhevsk');
 
 DROP TABLE IF EXISTS Observation;
 CREATE TABLE Observation (
-  oid      INTEGER PRIMARY KEY,
+  id      INTEGER PRIMARY KEY,
   datetime  DATETIME,
   city  INTEGER REFERENCES City (id),
   state   INTEGER REFERENCES State (id),

@@ -27,3 +27,31 @@ class Database:
 
     def close(self):
         self.conn.close()
+
+    def select_states(self):
+        return {
+            id_: value for (id_, value) in
+            self.cur.execute('SELECT id, value FROM State').fetchall()
+        }
+
+    def select_directions(self):
+        return {
+            id_: value for (id_, value) in
+            self.cur.execute('SELECT id, value FROM Direction').fetchall()
+        }
+
+    def select_cities(self):
+        return {
+            id_: value for (id_, value) in
+            self.cur.execute('SELECT id, value FROM City').fetchall()
+        }
+
+    def select_observations(self):
+        return {
+            values[0]: values[1:] for values in
+            self.cur.execute(
+                'SELECT id, datetime, city, state, temperature, '
+                'precipitation, presure, wind_direction, wind_value '
+                'FROM Observation'
+            ).fetchall()
+        }
