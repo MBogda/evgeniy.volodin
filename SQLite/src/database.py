@@ -46,12 +46,43 @@ class Database:
             self.cur.execute('SELECT id, value FROM City').fetchall()
         }
 
+    def insert_city(self, city_name):
+        self.cur.execute('INSERT INTO City(value) VALUES (?)', (city_name,))
+        self.conn.commit()
+        return self.cur.lastrowid
+
+    def delete_city(self, city_id):
+        self.cur.execute('DELETE FROM City WHERE id = ?', (city_id,))
+        self.conn.commit()
+
     def select_observations(self):
         return {
             values[0]: values[1:] for values in
             self.cur.execute(
                 'SELECT id, datetime, city, state, temperature, '
-                'precipitation, presure, wind_direction, wind_value '
+                'precipitation, pressure, wind_direction, wind_value '
                 'FROM Observation'
             ).fetchall()
         }
+
+    def insert_observation(
+            self, time=None, city=None, state=None, temperature=None,
+            precipitation=None, pressure=None, wind_direction=None,
+            wind_value=None
+    ):
+        self.cur.execute(
+            'INSERT INTO Observation(datetime, city, state, temperature, '
+            'precipitation, pressure, wind_direction, wind_value) '
+            'VALUES (?, ?, ?, ?, ?, ?, ?, ?)',
+            (time, city, state, temperature, precipitation, pressure,
+             wind_direction, wind_value)
+        )
+        self.conn.commit()
+        return self.cur.lastrowid
+
+    def delete_observation(self, observation_id):
+        self.cur.execute(
+            'DELETE FROM Observation WHERE id = ?',
+            (observation_id,)
+        )
+        self.conn.commit()

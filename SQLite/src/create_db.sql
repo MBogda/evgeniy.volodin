@@ -54,12 +54,12 @@ INSERT INTO City(value) VALUES ('Izhevsk');
 DROP TABLE IF EXISTS Observation;
 CREATE TABLE Observation (
   id      INTEGER PRIMARY KEY,
-  datetime  DATETIME,
+  datetime  TIMESTAMP,
   city  INTEGER REFERENCES City (id),
   state   INTEGER REFERENCES State (id),
   temperature   REAL,
   precipitation   REAL,
-  presure   REAL,
+  pressure   REAL,
   wind_direction  INTEGER REFERENCES Direction (id),
   wind_value  REAL
 );

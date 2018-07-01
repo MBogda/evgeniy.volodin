@@ -1,12 +1,109 @@
 import os
 import sqlite3
 from textwrap import indent, dedent
+from datetime import datetime
 
 from database import Database
 
 
 def make_list(d):
     return '\n'.join('{}. {}'.format(key, value) for key, value in d.items())
+
+
+def get_observation_details(db):
+    print('Enter the observation details.')
+    while True:
+        time = input(
+            'Enter date and time in format "YYYY-MM-DD HH:MM:SS" '
+            'or empty string to get current date and time: '
+        )
+        try:
+            if time:
+                time = datetime.fromisoformat(time)
+            else:
+                time = datetime.now()
+        except ValueError as e:
+            print(e)
+        else:
+            break
+    while True:
+        cities = db.select_cities()
+        print('List of the cities:')
+        print(indent(make_list(cities), '  '))
+        try:
+            city = int(input('Enter the number of the city: '))
+            assert city in cities
+        except (ValueError, AssertionError):
+            print('Please enter one of the number of the cities.')
+        else:
+            break
+    while True:
+        states = db.select_states()
+        print('List of the weather states:')
+        print(indent(make_list(states), '  '))
+        try:
+            state = int(input('Enter the number of the weather state: '))
+            assert state in states
+        except (ValueError, AssertionError):
+            print('Please enter one of the number of the weather states.')
+        else:
+            break
+    while True:
+        try:
+            temperature = float(input(
+                'Enter the temperature (°C): '
+            ))
+        except ValueError as e:
+            print(e)
+        else:
+            break
+    while True:
+        try:
+            precipitation = float(input(
+                'Enter the precipitation (mm): '
+            ))
+        except ValueError as e:
+            print(e)
+        else:
+            break
+    while True:
+        try:
+            pressure = float(input(
+                'Enter the pressure (mm Hg): '
+            ))
+        except ValueError as e:
+            print(e)
+        else:
+            break
+    while True:
+        directions = db.select_directions()
+        print('List of the wind directions:')
+        print(indent(make_list(directions), '  '))
+        try:
+            direction = int(input('Enter the number of the wind direction: '))
+            assert direction in directions
+        except (ValueError, AssertionError):
+            print('Please enter one of the number of the wind directions.')
+        else:
+            break
+    while True:
+        try:
+            wind_value = float(input(
+                'Enter the wind speed (m/s): '
+            ))
+        except ValueError as e:
+            print(e)
+        else:
+            break
+    while True:
+        ans = input('Add current observation? (y/n): ')
+        if ans[0] == 'y':
+            return {'time': time, 'city': city, 'state': state,
+                    'temperature': temperature, 'precipitation': precipitation,
+                    'pressure': pressure, 'wind_direction': direction,
+                    'wind_value': wind_value}
+        elif ans[0] == 'n':
+            return {}
 
 
 def db_dialog(db, filename):
@@ -24,6 +121,7 @@ def db_dialog(db, filename):
         0. Close database.
     '''.format(filename))
     incorrect_option_message = 'Please enter a digit from 0 to 8.'
+    incorrect_id_message = 'Please enter the number.'
 
     while True:
         try:
@@ -35,13 +133,70 @@ def db_dialog(db, filename):
             if option == 0:
                 break
             elif option == 1:
-                print(db.select_observations())
+                states = db.select_states()
+                directions = db.select_directions()
+                cities = db.select_cities()
+                for id_, values in db.select_observations().items():
+                    print(dedent('''\
+                    Observation {}.
+                      Date and time: {}
+                      City: {}
+                      Weather state: {}
+                      Temperature: {} °C
+                      Precipitation: {} mm
+                      Pressure: {} mm Hg
+                      Wind direction: {}
+                      Wind speed: {} m/s'''.format(
+                        id_, values[0], cities[values[1]], states[values[2]],
+                        *values[3:6], directions[values[6]], values[7]
+                    )))
+            elif option == 2:
+                values = get_observation_details(db)
+                if values:
+                    try:
+                        observation_id = db.insert_observation(**values)
+                    except sqlite3.IntegrityError as e:
+                        print(e)
+                    else:
+                        print(
+                            'New observation is added with '
+                            'number {}.'.format(observation_id)
+                        )
+                else:
+                    print('Observation is not added.')
+            elif option == 3:
+                try:
+                    observation_id = int(input(
+                        'Enter the number of the deleting observation '
+                        'or 0 to cancel: '
+                    ))
+                except ValueError:
+                    print(incorrect_id_message)
+                else:
+                    db.delete_observation(observation_id)
             elif option == 4:
                 print('List of the cities:')
                 print(indent(
                     make_list(db.select_cities()),
                     '  '
                 ))
+            elif option == 5:
+                city_name = input('Enter the name of the new city: ')
+                city_id = db.insert_city(city_name)
+                print('New city {} added with number {}.'.format(
+                    city_name, city_id))
+            elif option == 6:
+                try:
+                    city_id = int(input(
+                        'Enter the number of the deleting city '
+                        'or 0 to cancel: '
+                    ))
+                    if city_id:
+                        db.delete_city(city_id)
+                except ValueError:
+                    print(incorrect_id_message)
+                except sqlite3.IntegrityError as e:
+                    print(e)
             elif option == 7:
                 print('List of the weather states:')
                 print(indent(
